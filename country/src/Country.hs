@@ -118,8 +118,8 @@ word16ToInt = fromIntegral
 chartoWord8 :: Char -> Word8
 chartoWord8 = fromIntegral . ord
 
-word16ToChar :: Word16 -> Char
-word16ToChar = chr . fromIntegral
+word8ToChar :: Word8 -> Char
+word8ToChar = chr . fromIntegral
 
 numberOfCountries :: Int
 numberOfCountries = length countryNameQuads
@@ -173,10 +173,10 @@ mapTextArray :: (Char -> Char) -> TA.Array -> TA.Array
 mapTextArray f a@(TA.ByteArray inner) = TA.run $ do
   let len = half (I# (sizeofByteArray# inner))
   m <- TA.new len
-  TA.copyI m 0 a 0 len
+  TA.copyI len m 0 a 0
   let go !ix = if ix < len
         then do
-          TA.unsafeWrite m ix (chartoWord8 (f (word16ToChar (TA.unsafeIndex a ix))))
+          TA.unsafeWrite m ix (chartoWord8 (f (word8ToChar (TA.unsafeIndex a ix))))
           go (ix + 1)
         else return ()
   go 0
