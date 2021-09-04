@@ -170,7 +170,7 @@ allAlphaTwoLower = mapTextArray toLower allAlphaTwoUpper
 {-# NOINLINE allAlphaTwoLower #-}
 
 mapTextArray :: (Char -> Char) -> TA.Array -> TA.Array
-mapTextArray f a@(TA.Array inner) = TA.run $ do
+mapTextArray f a@(TA.ByteArray inner) = TA.run $ do
   let len = half (I# (sizeofByteArray# inner))
   m <- TA.new len
   TA.copyI m 0 a 0 len
