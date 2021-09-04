@@ -115,8 +115,8 @@ parserUtf8 = coerce (trieByteParser decodeTrieUtf8)
 word16ToInt :: Word16 -> Int
 word16ToInt = fromIntegral
 
-charToWord16 :: Char -> Word16
-charToWord16 = fromIntegral . ord
+chartoWord8 :: Char -> Word8
+chartoWord8 = fromIntegral . ord
 
 word16ToChar :: Word16 -> Char
 word16ToChar = chr . fromIntegral
@@ -145,8 +145,8 @@ allAlphaTwoUpper = TA.run $ do
   m <- TA.new (timesTwo numberOfCountries)
   forM_ countryNameQuads $ \(n,_,(a1,a2),_) -> do
     let ix = timesTwo (indexOfCountry (Country n))
-    TA.unsafeWrite m ix (charToWord16 a1)
-    TA.unsafeWrite m (ix + 1) (charToWord16 a2)
+    TA.unsafeWrite m ix (chartoWord8 a1)
+    TA.unsafeWrite m (ix + 1) (chartoWord8 a2)
   return m
 {-# NOINLINE allAlphaTwoUpper #-}
 
@@ -155,9 +155,9 @@ allAlphaThreeUpper = TA.run $ do
   m <- TA.new (timesThree numberOfCountries)
   forM_ countryNameQuads $ \(n,_,_,(a1,a2,a3)) -> do
     let ix = timesThree (indexOfCountry (Country n))
-    TA.unsafeWrite m ix (charToWord16 a1)
-    TA.unsafeWrite m (ix + 1) (charToWord16 a2)
-    TA.unsafeWrite m (ix + 2) (charToWord16 a3)
+    TA.unsafeWrite m ix (chartoWord8 a1)
+    TA.unsafeWrite m (ix + 1) (chartoWord8 a2)
+    TA.unsafeWrite m (ix + 2) (chartoWord8 a3)
   return m
 {-# NOINLINE allAlphaThreeUpper #-}
 
@@ -176,7 +176,7 @@ mapTextArray f a@(TA.ByteArray inner) = TA.run $ do
   TA.copyI m 0 a 0 len
   let go !ix = if ix < len
         then do
-          TA.unsafeWrite m ix (charToWord16 (f (word16ToChar (TA.unsafeIndex a ix))))
+          TA.unsafeWrite m ix (chartoWord8 (f (word16ToChar (TA.unsafeIndex a ix))))
           go (ix + 1)
         else return ()
   go 0
